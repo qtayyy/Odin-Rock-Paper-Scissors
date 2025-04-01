@@ -1,56 +1,53 @@
+let	humanScore = 0;
+let computerScore = 0;
+const	body = document.querySelector("body");
+const	res = document.createElement("div");
+body.appendChild(res);
+
 function getComputerChoice() {
 	const choices = ["rock", "paper", "scissors"];
 	return (choices[Math.floor(Math.random() * 3)]);
 }
 
-function getHumanChoice() {
-	let humanChoice;
-	
-	do {
-		humanChoice = prompt("Enter: rock, paper or scissors");
-		humanChoice = humanChoice.toLowerCase();
-	}
-	while (humanChoice !== "rock" && humanChoice !== "paper" && humanChoice !== "scissors")	
-	return (humanChoice);
-}
+function playRound(humanChoice, computerChoice) {
+	res.textContent = "";
 
-function	playGame() {
-	let	humanScore = 0;
-	let	computerScore = 0;
-
-	function playRound(humanChoice, computerChoice) {
-		if (humanChoice === computerChoice)
-		{
-			console.log("It's a draw!");
-			return;
-		}
-		
-		const winningCombinations = {
-			"rock" : "scissors",
-			"paper" : "rock",
-			"scissors" : "paper"
-		}
-		if (winningCombinations[humanChoice] === computerChoice)
-		{
-			humanScore++;
-			console.log(`You win! ${humanChoice} beats ${computerChoice}`);
-		}
-		else
-		{
-			computerScore++;
-			console.log(`You lose! ${computerChoice} beats ${humanChoice}`);
-		}
-	}
-
-	while (humanScore < 3 && computerScore < 3)
+	if (humanChoice === computerChoice)
 	{
-		playRound(getHumanChoice(), getComputerChoice());
-		console.log(`human score: ${humanScore}; computer score: ${computerScore}`);
+		res.textContent = "It's a draw!"
+		return;
 	}
-	if (humanScore >= 3)
-		console.log("You win!");
+	
+	const winningCombinations = {
+		"rock" : "scissors",
+		"paper" : "rock",
+		"scissors" : "paper"
+	}
+	if (winningCombinations[humanChoice] === computerChoice)
+	{
+		humanScore++;
+		res.textContent = `You win! ${humanChoice} beats ${computerChoice}`;
+	}
 	else
-		console.log("You lose!");
+	{
+		computerScore++;
+		res.textContent = `You lose! ${computerChoice} beats ${humanChoice}`;
+	}
+	if (humanScore >= 5)
+		res.textContent = "You win!";
+	else if (computerScore >= 5)
+		res.textContent = "You lose!";
 }
 
-playGame();
+const	buttons = document.querySelectorAll("button");
+buttons.forEach((button) => {
+	button.addEventListener("click", () => {
+		const	playerSelection = button.id;
+		if (humanScore < 5 && computerScore < 5)
+		{
+			playRound(playerSelection, getComputerChoice());
+			const scores = document.querySelector("#scores");
+			scores.textContent = `human score: ${humanScore}; computer score: ${computerScore}`;
+		}
+	})
+})
